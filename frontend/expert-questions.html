@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Expert Q&A Panel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --card:#1a1f2b;
+  --border:rgba(255,255,255,0.1);
+  --text-primary:#ffffff;
+  --text-secondary:#cbd5e1;
+  --text-muted:#94a3b8;
+
+  /* 🌿 GREEN THEME */
+  --accent:#4CAF50;
+  --accent-glow:rgba(76,175,80,0.2);
+  --accent-soft:rgba(76,175,80,0.08);
+
+  --green:#4CAF50;
+  --green-bg:rgba(76,175,80,0.1);
+  --amber:#ff9800;
+  --amber-bg:rgba(255,152,0,0.1);
+
+  --radius:14px;
+  --radius-sm:8px;
+
+  --font:'Sora',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+
+/* 🌿 BACKGROUND */
+body{
+  font-family:var(--font);
+  min-height:100vh;
+  padding:2rem 1rem 4rem;
+
+  background:
+  linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.8)),
+  url("images/plant.jpg");
+
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+
+  color:var(--text-primary);
+}
+
+/* HEADER */
+.header{
+max-width:760px;
+margin:auto;
+margin-bottom:2rem;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.header-title{
+font-size:22px;
+font-weight:600;
+}
+
+.badge{
+background:var(--accent-soft);
+border:1px solid var(--accent);
+padding:6px 12px;
+border-radius:20px;
+font-size:13px;
+}
+
+/* TOOLBAR */
+.toolbar{
+max-width:760px;
+margin:auto;
+margin-bottom:1rem;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.filter-btn{
+padding:6px 14px;
+border-radius:20px;
+border:1px solid var(--border);
+background:rgba(255,255,255,0.05);
+color:white;
+cursor:pointer;
+}
+
+.filter-btn.active{
+background:var(--accent-soft);
+border-color:var(--accent);
+color:var(--accent);
+}
+
+.toolbar-count{
+margin-left:auto;
+font-size:13px;
+color:var(--text-secondary);
+}
+
+/* LIST */
+#question-list{
+max-width:760px;
+margin:auto;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+/* CARD */
+.q-card{
+background:var(--card);
+border-radius:var(--radius);
+padding:15px;
+cursor:pointer;
+transition:0.3s;
+border:1px solid var(--border);
+}
+
+.q-card:hover{
+transform:translateY(-2px);
+}
+
+.q-text{
+font-size:15px;
+margin-bottom:6px;
+}
+
+.q-meta{
+font-size:12px;
+color:var(--text-secondary);
+}
+
+/* ANSWER BOX */
+.q-answer{
+display:none;
+margin-top:10px;
+}
+
+.q-card.expanded .q-answer{
+display:block;
+}
+
+textarea{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:none;
+margin-top:8px;
+}
+
+/* BUTTON */
+button{
+margin-top:10px;
+background:var(--accent);
+border:none;
+padding:8px 14px;
+border-radius:6px;
+cursor:pointer;
+color:black;
+font-weight:600;
+}
+
+button:hover{
+opacity:0.8;
+}
+
+/* EMPTY */
+.state-box{
+text-align:center;
+margin-top:30px;
+color:#ddd;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+  <h1 class="header-title">🌾 Expert Dashboard</h1>
+  <div class="badge">Live</div>
+</div>
+
+<div class="toolbar">
+  <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+  <button class="filter-btn" onclick="setFilter('unanswered',this)">Unanswered</button>
+  <button class="filter-btn" onclick="setFilter('answered',this)">Answered</button>
+  <span class="toolbar-count" id="count-label">0 questions</span>
+</div>
+
+<div id="question-list"></div>
+
+<script>
+
+const user = JSON.parse(localStorage.getItem("user") || '{"id":1}');
+const BASE = "http://localhost:5000";
+
+let allQuestions = [];
+let currentFilter = "all";
+let expanded = null;
+
+// =======================
+// FILTER
+// =======================
+function setFilter(f, btn){
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+// =======================
+// LOAD QUESTIONS
+// =======================
+async function loadQuestions(){
+  try{
+    const res = await fetch(BASE + "/api/users/expert-questions/" + user.id);
+
+    if(!res.ok){
+      throw new Error("API not found");
+    }
+
+    const text = await res.text();
+
+    try{
+      allQuestions = JSON.parse(text);
+    }catch{
+      console.error("Invalid JSON:", text);
+      allQuestions = [];
+    }
+
+  }catch(err){
+    console.log("API ERROR:", err);
+    allQuestions = [];
+  }
+
+  render();
+}
+
+// =======================
+// RENDER UI (🔥 FIXED)
+// =======================
+function render(){
+  const list = document.getElementById("question-list");
+
+  let qs = allQuestions;
+
+  if(currentFilter === "unanswered") qs = qs.filter(q => !q.answer);
+  if(currentFilter === "answered") qs = qs.filter(q => q.answer);
+
+  document.getElementById("count-label").innerText = qs.length + " questions";
+
+  if(!qs.length){
+    list.innerHTML = "<div class='state-box'>No questions yet 🌱</div>";
+    return;
+  }
+
+  list.innerHTML = qs.map(q => `
+    <div class="q-card ${expanded === q.id ? 'expanded' : ''}" onclick="toggle(${q.id})">
+
+      <div class="q-text">${q.question}</div>
+
+      <div class="q-meta">
+        ${q.answer ? "Answered ✅" : "Pending ⏳"}
+      </div>
+
+      <div class="q-answer">
+
+        <!-- 🔥 FIX HERE -->
+        <textarea 
+          id="ans_${q.id}" 
+          placeholder="Write answer..."
+          onclick="event.stopPropagation()"
+        >${q.answer || ""}</textarea>
+
+        <!-- 🔥 FIX HERE -->
+        <button onclick="event.stopPropagation(); sendAnswer(event, ${q.id})">
+          Submit
+        </button>
+
+      </div>
+
+    </div>
+  `).join('');
+}
+
+// =======================
+// TOGGLE CARD
+// =======================
+function toggle(id){
+  expanded = expanded === id ? null : id;
+  render();
+}
+
+// =======================
+// SEND ANSWER
+// =======================
+async function sendAnswer(e, id){
+  e.stopPropagation();
+
+  const answer = document.getElementById("ans_" + id).value.trim();
+
+  if(!answer){
+    alert("Please enter answer ❌");
+    return;
+  }
+
+  try{
+    const res = await fetch(BASE + "/api/users/answer-question", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        question_id: id,
+        expert_id: user.id,
+        answer: answer
+      })
+    });
+
+    const text = await res.text();
+
+    let data;
+    try{
+      data = JSON.parse(text);
+    }catch{
+      throw new Error("Invalid server response");
+    }
+
+    if(!res.ok){
+      throw new Error(data.message || "Failed");
+    }
+
+    alert("Answer submitted ✅");
+
+    loadQuestions();
+
+  }catch(err){
+    console.error("Submit Error:", err);
+    alert("Error submitting answer ❌");
+  }
+}
+
+// =======================
+// INIT
+// =======================
+loadQuestions();
+
+</script>
+
+</body>
+</html>
+
+
+

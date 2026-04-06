@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Government Schemes – KisanMitra</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark:   #1a4a1f;
+    --green-mid:    #2d7a35;
+    --gold:         #e8b94a;
+    --gold-light:   #f5d87a;
+    --glass-bg:     rgba(10, 40, 14, 0.62);
+    --glass-border: rgba(255,255,255,0.18);
+    --text-light:   rgba(255,255,255,0.92);
+    --text-muted:   rgba(255,255,255,0.58);
+  }
+
+  html, body { min-height: 100vh; font-family: 'DM Sans', sans-serif; color: var(--text-light); }
+
+  /* ── BACKGROUND ── */
+  .bg-wrap {
+    position: fixed; inset: 0; z-index: -1;
+    background: url('plant.jpg') center/cover no-repeat;
+    background-color: #1a4a1f;
+  }
+  .bg-wrap::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg,
+      rgba(10,35,12,0.80) 0%,
+      rgba(26,74,31,0.68) 50%,
+      rgba(5,20,8,0.88) 100%
+    );
+  }
+
+  /* ── PAGE ── */
+  .page { min-height: 100vh; padding: 36px 24px 60px; display: flex; flex-direction: column; align-items: center; }
+
+  /* ── NAV ── */
+  .topnav {
+    width: 100%; max-width: 1150px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 40px;
+    padding: 13px 24px;
+    background: rgba(10,40,14,0.55);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    backdrop-filter: blur(14px);
+    animation: slideDown .6s ease both;
+  }
+  .nav-brand { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--gold); text-decoration:none; }
+  .nav-brand span { color:#fff; }
+  .nav-back {
+    display:flex; align-items:center; gap:7px;
+    padding:8px 20px;
+    background:var(--gold); color:var(--green-dark);
+    font-weight:700; font-size:13px;
+    border-radius:8px; text-decoration:none;
+    transition:all .22s;
+  }
+  .nav-back:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(232,185,74,.4); }
+
+  /* ── PAGE HEADER ── */
+  .page-header { text-align:center; margin-bottom:36px; animation:fadeUp .7s ease .1s both; }
+  .badge {
+    display:inline-block;
+    background:linear-gradient(135deg,var(--green-mid),#3aaa44);
+    color:#fff; font-size:11px; font-weight:700;
+    letter-spacing:2.5px; text-transform:uppercase;
+    padding:5px 18px; border-radius:20px; margin-bottom:14px;
+  }
+  .page-header h1 {
+    font-family:'Playfair Display',serif;
+    font-size:2.4rem; font-weight:800;
+    color:var(--gold); text-shadow:0 3px 14px rgba(0,0,0,.5);
+  }
+  .page-header p { margin-top:10px; font-size:15px; color:var(--text-muted); font-weight:300; }
+  .header-divider { width:64px; height:3px; background:linear-gradient(90deg,var(--gold),var(--green-mid)); border-radius:2px; margin:14px auto 0; }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display:flex; gap:14px; margin-bottom:30px;
+    flex-wrap:wrap; justify-content:center;
+    animation:fadeUp .7s ease .2s both;
+  }
+  .stat-chip {
+    background:var(--glass-bg);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(12px);
+    border-radius:50px; padding:10px 22px;
+    display:flex; align-items:center; gap:8px;
+    font-size:13.5px; font-weight:500;
+  }
+  .chip-dot { width:9px; height:9px; border-radius:50%; }
+  .dot-total  { background:var(--gold); }
+  .dot-open   { background:#4caf50; box-shadow:0 0 6px #4caf50; }
+  .dot-applied{ background:#2196f3; box-shadow:0 0 6px #2196f3; }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap {
+    width:100%; max-width:1150px;
+    margin-bottom:24px;
+    animation:fadeUp .7s ease .25s both;
+  }
+  .search-box {
+    width:100%; padding:14px 20px;
+    background:rgba(10,40,14,0.55);
+    border:1.5px solid var(--glass-border);
+    border-radius:12px;
+    backdrop-filter:blur(12px);
+    color:#fff; font-size:14px;
+    font-family:'DM Sans',sans-serif;
+    outline:none; transition:border .2s;
+  }
+  .search-box::placeholder { color:var(--text-muted); }
+  .search-box:focus { border-color:var(--gold); }
+
+  /* ── PANEL ── */
+  .panel {
+    width:100%; max-width:1150px;
+    background:var(--glass-bg);
+    border:1.5px solid var(--glass-border);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-radius:24px; overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+    animation:fadeUp .7s ease .3s both;
+  }
+
+  /* ── TABLE HEAD ── */
+  .table-head {
+    display:grid;
+    grid-template-columns: 200px 1fr 180px 120px 120px;
+    background:linear-gradient(90deg, rgba(26,74,31,.92), rgba(45,122,53,.8));
+    border-bottom:1.5px solid var(--glass-border);
+  }
+  .th {
+    padding:16px 18px;
+    font-size:11px; font-weight:700;
+    letter-spacing:1.8px; text-transform:uppercase;
+    color:var(--gold-light);
+    display:flex; align-items:center; gap:6px;
+  }
+  .th:not(:last-child) { border-right:1px solid rgba(255,255,255,.1); }
+
+  /* ── TABLE ROWS ── */
+  #schemes-body { width:100%; }
+  .s-row {
+    display:grid;
+    grid-template-columns: 200px 1fr 180px 120px 120px;
+    border-bottom:1px solid rgba(255,255,255,.07);
+    transition:background .2s;
+    animation:rowIn .45s ease both;
+  }
+  .s-row:last-child { border-bottom:none; }
+  .s-row:hover { background:rgba(255,255,255,.06); }
+  .td {
+    padding:18px 18px;
+    font-size:13.5px; line-height:1.55;
+    color:var(--text-light);
+    display:flex; align-items:center;
+  }
+  .td:not(:last-child) { border-right:1px solid rgba(255,255,255,.06); }
+
+  /* Title cell */
+  .scheme-title { font-weight:700; font-size:14px; color:var(--gold-light); }
+
+  /* Eligibility badge */
+  .elig-badge {
+    display:inline-block;
+    background:rgba(232,185,74,.12);
+    border:1px solid rgba(232,185,74,.3);
+    color:var(--gold-light);
+    font-size:11.5px; font-weight:600;
+    padding:4px 12px; border-radius:20px;
+  }
+
+  /* View link */
+  .view-link {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:7px 16px;
+    background:rgba(255,255,255,.1);
+    border:1px solid rgba(255,255,255,.2);
+    color:#fff; font-size:12.5px; font-weight:600;
+    border-radius:8px; text-decoration:none;
+    transition:all .2s;
+  }
+  .view-link:hover { background:rgba(255,255,255,.18); transform:translateY(-2px); }
+
+  /* Apply button */
+  .btn-apply {
+    display:inline-flex; align-items:center; gap:6px;
+    padding:9px 18px;
+    background:linear-gradient(135deg, var(--gold), #c8962a);
+    color:var(--green-dark);
+    font-weight:700; font-size:12.5px;
+    border:none; border-radius:8px;
+    cursor:pointer; transition:all .22s;
+    font-family:'DM Sans',sans-serif;
+  }
+  .btn-apply:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(232,185,74,.4); }
+  .btn-apply.applied {
+    background:linear-gradient(135deg,#4caf50,#388e3c);
+    color:#fff; cursor:default;
+    pointer-events:none;
+  }
+
+  /* Empty state */
+  .empty-state { padding:70px 24px; text-align:center; color:var(--text-muted); }
+  .empty-state .empty-icon { font-size:3.5rem; margin-bottom:16px; }
+  .empty-state h3 { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--gold); margin-bottom:8px; }
+
+  /* Skeleton */
+  .skeleton-row {
+    display:grid;
+    grid-template-columns: 200px 1fr 180px 120px 120px;
+    border-bottom:1px solid rgba(255,255,255,.07);
+    padding:20px 18px; gap:18px;
+  }
+  .skel {
+    height:18px; border-radius:6px;
+    background:linear-gradient(90deg,rgba(255,255,255,.06) 25%,rgba(255,255,255,.12) 50%,rgba(255,255,255,.06) 75%);
+    background-size:200% 100%;
+    animation:shimmer 1.5s infinite;
+  }
+
+  /* Toast */
+  .toast {
+    position:fixed; bottom:28px; right:28px;
+    background:linear-gradient(135deg,#4caf50,#388e3c);
+    color:#fff; padding:14px 24px;
+    border-radius:12px; font-weight:600; font-size:14px;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+    z-index:9999;
+    transform:translateY(80px); opacity:0;
+    transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .toast.show { transform:translateY(0); opacity:1; }
+
+  /* Animations */
+  @keyframes slideDown { from{opacity:0;transform:translateY(-18px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp    { from{opacity:0;transform:translateY(22px)}  to{opacity:1;transform:translateY(0)} }
+  @keyframes rowIn     { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes shimmer   { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* Responsive */
+  @media(max-width:900px){
+    .table-head,.s-row,.skeleton-row { grid-template-columns:1fr 1fr; }
+    .th:not(:last-child),.td:not(:last-child){ border-right:none; border-bottom:1px solid rgba(255,255,255,.07); }
+    .page-header h1 { font-size:1.8rem; }
+  }
+  @media(max-width:580px){
+    .table-head,.s-row,.skeleton-row { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-wrap"></div>
+
+<div class="page">
+
+  <!-- Nav -->
+  <nav class="topnav">
+    <a href="/" class="nav-brand"><span>Kisan</span>Mitra</a>
+    <a href="javascript:history.back()" class="nav-back">← Dashboard</a>
+  </nav>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="badge">🏛️ Welfare Programs</div>
+    <h1>Government Schemes</h1>
+    <p>Explore and apply for government welfare schemes designed to support Indian farmers</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-chip"><span class="chip-dot dot-total"></span><span id="statTotal">— Total Schemes</span></div>
+    <div class="stat-chip"><span class="chip-dot dot-open"></span><span id="statOpen">— Available</span></div>
+    <div class="stat-chip"><span class="chip-dot dot-applied"></span><span id="statApplied">— Applied</span></div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <input class="search-box" id="searchBox" type="text" placeholder="🔍  Search schemes by title, eligibility..." oninput="filterSchemes()"/>
+  </div>
+
+  <!-- Panel -->
+  <div class="panel">
+    <div class="table-head">
+      <div class="th">📋 Scheme Title</div>
+      <div class="th">📝 Description</div>
+      <div class="th">✅ Eligibility</div>
+      <div class="th">🔗 Info</div>
+      <div class="th">🚀 Apply</div>
+    </div>
+    <div id="schemes-body">
+      <div class="skeleton-row"><div class="skel" style="width:80%"></div><div class="skel" style="width:90%"></div><div class="skel" style="width:65%"></div><div class="skel" style="width:55%"></div><div class="skel" style="width:60%"></div></div>
+      <div class="skeleton-row"><div class="skel" style="width:70%"></div><div class="skel" style="width:85%"></div><div class="skel" style="width:70%"></div><div class="skel" style="width:50%"></div><div class="skel" style="width:55%"></div></div>
+      <div class="skeleton-row"><div class="skel" style="width:75%"></div><div class="skel" style="width:88%"></div><div class="skel" style="width:60%"></div><div class="skel" style="width:58%"></div><div class="skel" style="width:62%"></div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ Application submitted successfully!</div>
+
+<script>
+const user = JSON.parse(localStorage.getItem("user")) || { id: 1 };
+let allSchemes = [];
+let appliedIds = new Set();
+
+async function loadSchemes() {
+  try {
+    const res = await fetch("http://localhost:5000/api/users/government/schemes");
+    allSchemes = await res.json();
+  } catch {
+    // Demo fallback
+    allSchemes = [
+      { id:1, title:"PM Kisan Samman Nidhi",     description:"Direct income support of ₹6,000 per year to all landholding farmer families across India.", eligibility:"All landholding farmers with cultivable land.", official_link:"https://pmkisan.gov.in" },
+      { id:2, title:"Pradhan Mantri Fasal Bima Yojana", description:"Crop insurance scheme providing financial support to farmers suffering crop loss due to unforeseen events.", eligibility:"All farmers including sharecroppers and tenant farmers.", official_link:"https://pmfby.gov.in" },
+      { id:3, title:"Kisan Credit Card",          description:"Provides farmers with affordable credit for agricultural needs, post-harvest expenses and allied activities.", eligibility:"Farmers, tenant farmers, oral lessees and sharecroppers.", official_link:"https://agricoop.nic.in" },
+      { id:4, title:"PM Krishi Sinchai Yojana",   description:"Ensures access to protective irrigation to all agricultural farms and improve water use efficiency.", eligibility:"All farmers with irrigated or rain-fed land.", official_link:"https://pmksy.gov.in" },
+      { id:5, title:"e-NAM",                      description:"Pan-India electronic trading portal for agricultural commodities, enabling farmers to sell at best prices.", eligibility:"Farmers registered in any APMC mandi.", official_link:"https://enam.gov.in" },
+    ];
+  }
+  updateStats();
+  renderSchemes(allSchemes);
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent   = allSchemes.length + ' Total Schemes';
+  document.getElementById('statOpen').textContent    = allSchemes.length + ' Available';
+  document.getElementById('statApplied').textContent = appliedIds.size   + ' Applied';
+}
+
+function filterSchemes() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const filtered = allSchemes.filter(s =>
+    s.title.toLowerCase().includes(q) ||
+    s.eligibility.toLowerCase().includes(q) ||
+    s.description.toLowerCase().includes(q)
+  );
+  renderSchemes(filtered);
+}
+
+function renderSchemes(schemes) {
+  const body = document.getElementById('schemes-body');
+  if (!schemes.length) {
+    body.innerHTML = `<div class="empty-state"><div class="empty-icon">🌾</div><h3>No Schemes Found</h3><p>Try a different search keyword.</p></div>`;
+    return;
+  }
+  body.innerHTML = schemes.map((s, i) => `
+    <div class="s-row" style="animation-delay:${i * 0.07}s">
+      <div class="td"><span class="scheme-title">${s.title}</span></div>
+      <div class="td" style="font-size:13px;color:rgba(255,255,255,.78)">${s.description}</div>
+      <div class="td"><span class="elig-badge">${s.eligibility}</span></div>
+      <div class="td"><a href="${s.official_link}" target="_blank" class="view-link">🔗 View</a></div>
+      <div class="td">
+        <button class="btn-apply ${appliedIds.has(s.id) ? 'applied' : ''}"
+                id="btn-${s.id}"
+                onclick="applyScheme(${s.id})">
+          ${appliedIds.has(s.id) ? '✅ Applied' : '🚀 Apply'}
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+async function applyScheme(id) {
+  const btn = document.getElementById('btn-' + id);
+  if (!btn || btn.classList.contains('applied')) return;
+  btn.textContent = '⏳ Submitting...';
+  btn.style.opacity = '0.7';
+  try {
+    await fetch("http://localhost:5000/api/users/farmer/apply-scheme", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ farmer_id: user.id, scheme_id: id })
+    });
+  } catch {}
+  appliedIds.add(id);
+  btn.textContent = '✅ Applied';
+  btn.classList.add('applied');
+  btn.style.opacity = '1';
+  updateStats();
+  showToast();
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+loadSchemes();
+</script>
+</body>
+</html>

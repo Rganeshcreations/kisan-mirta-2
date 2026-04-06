@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Expert Profile View - KisanMitra</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:
+linear-gradient(rgba(34,139,34,0.6), rgba(0,0,0,0.7)),
+url("images/farm-bg.jpg");
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+color:white;
+}
+
+.container{
+display:flex;
+padding:40px;
+}
+
+/* LEFT PANEL */
+.left-panel{
+width:300px;
+background:rgba(0,0,0,0.6);
+padding:25px;
+border-radius:15px;
+text-align:center;
+}
+
+.left-panel img{
+width:150px;
+height:150px;
+border-radius:50%;
+border:4px solid white;
+object-fit:cover;
+}
+
+.left-panel h2{
+margin-top:15px;
+}
+
+/* RIGHT PANEL */
+.right-panel{
+flex:1;
+margin-left:40px;
+background:rgba(255,255,255,0.15);
+padding:30px;
+border-radius:15px;
+backdrop-filter:blur(12px);
+box-shadow:0 8px 25px rgba(0,0,0,0.4);
+}
+
+.info-row{
+margin-bottom:15px;
+font-size:18px;
+}
+
+.edit-btn{
+background:white;
+color:green;
+padding:10px 20px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+border:none;
+margin-top:20px;
+}
+
+.edit-btn:hover{
+background:#c8e6c9;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+<img src="images/ganesh.jpg" id="profileImage">
+<h2 id="expertName"></h2>
+<p id="expertLocation"></p>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+
+<h1>👨‍🌾 Expert Profile</h1>
+
+<div class="info-row">🌾 Specialization: <span id="specialization">-</span></div>
+<div class="info-row">📅 Experience: <span id="experience">-</span></div>
+<div class="info-row">🎓 Qualification: <span id="qualification">-</span></div>
+<div class="info-row">📍 Location: <span id="location">-</span></div>
+<div class="info-row">📞 Phone: <span id="phone">-</span></div>
+
+<button class="edit-btn" onclick="editProfile()">Edit Profile</button>
+
+</div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", async function(){
+
+const user = {
+id: localStorage.getItem("viewExpertId"),
+name: localStorage.getItem("viewExpertName")
+};
+// 🔐 Login check
+if(!user){
+alert("Login required");
+window.location.href="/login";
+return;
+}
+
+// Show name
+document.getElementById("expertName").innerText = user.name || "Expert";
+
+try{
+
+const res = await fetch(
+"http://localhost:5000/api/users/expert-profile/" + user.id
+);
+
+// 🚨 API error check
+if(!res.ok){
+alert("Server error (API not working)");
+return;
+}
+
+const profile = await res.json();
+
+// 🚨 No profile case
+if(!profile.exists){
+alert("Profile not created");
+window.location.href="expert-profile";
+return;
+}
+
+// ✅ Fill profile safely
+document.getElementById("specialization").innerText = profile.specialization || "-";
+document.getElementById("experience").innerText = profile.experience || "-";
+document.getElementById("qualification").innerText = profile.qualification || "-";
+document.getElementById("location").innerText = profile.location || "-";
+document.getElementById("phone").innerText = profile.phone || "-";
+document.getElementById("expertLocation").innerText = profile.location || "-";
+
+}catch(error){
+
+console.log("❌ Profile error:", error);
+alert("Failed to load profile");
+
+}
+
+});
+
+// 🔄 Edit redirect
+function editProfile(){
+window.location.href="expert-profile";
+}
+
+</script>
+
+</body>
+</html>

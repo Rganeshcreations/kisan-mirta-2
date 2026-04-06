@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register - KisanMitra</title>
+  <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+
+  <div class="register-box">
+    <h2>KisanMitra Registration 🌾</h2>
+
+    <!-- Name -->
+    <input type="text" id="name" placeholder="Full Name" oninput="validateName()">
+    <small id="nameError"></small>
+
+    <!-- Email -->
+    <input type="email" id="email" placeholder="Email" oninput="validateEmail()">
+    <small id="emailError"></small>
+
+    <!-- Password -->
+    <input type="password" id="password" placeholder="Password" oninput="validatePassword()">
+    <small id="passwordError"></small>
+
+    <!-- Confirm Password -->
+    <input type="password" id="confirmPassword" placeholder="Confirm Password" oninput="checkConfirmPassword()">
+    <small id="confirmPasswordError"></small>
+
+    <!-- Password Strength -->
+    <div id="passwordStrength"></div>
+
+    <!-- Role -->
+    <select id="role">
+      <option value="">-- Select Role --</option>
+      <option value="farmer">Farmer</option>
+      <option value="expert">Expert</option>
+      <option value="government">Government</option>
+      <option value="public">Public</option>
+    </select>
+
+    <!-- IMPORTANT: type="button" prevents reload -->
+    <button type="button" onclick="registerUser()">Register</button>
+
+    <p id="message"></p>
+  </div>
+
+  <!-- Force reload of latest JS -->
+  <script src="./js/auth.js?v=20"></script>
+
+</body>
+</html>

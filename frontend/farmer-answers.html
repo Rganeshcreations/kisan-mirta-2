@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Questions – KisanMitra</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark:   #1a4a1f;
+    --green-mid:    #2d7a35;
+    --gold:         #e8b94a;
+    --gold-light:   #f5d87a;
+    --glass-bg:     rgba(10, 40, 14, 0.62);
+    --glass-border: rgba(255,255,255,0.18);
+    --text-light:   rgba(255,255,255,0.92);
+    --text-muted:   rgba(255,255,255,0.58);
+  }
+
+  html, body {
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-light);
+  }
+
+  /* ── BACKGROUND ── */
+  .bg-wrap {
+    position: fixed; inset: 0; z-index: -1;
+    background: url('image.jpg') center/cover no-repeat;
+  }
+  .bg-wrap::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(10,35,12,0.78) 0%,
+      rgba(26,74,31,0.70) 50%,
+      rgba(5,20,8,0.85) 100%
+    );
+  }
+
+  /* ── PAGE LAYOUT ── */
+  .page {
+    min-height: 100vh;
+    padding: 40px 24px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── TOP NAV BAR ── */
+  .topnav {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 44px;
+    padding: 14px 24px;
+    background: rgba(10,40,14,0.55);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    backdrop-filter: blur(14px);
+    animation: slideDown .6s ease both;
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-brand span { color: #fff; }
+  .nav-back {
+    display: flex; align-items: center; gap: 7px;
+    padding: 8px 20px;
+    background: var(--gold);
+    color: var(--green-dark);
+    font-weight: 700;
+    font-size: 13px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all .22s;
+  }
+  .nav-back:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(232,185,74,.4); }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeUp .7s ease .1s both;
+  }
+  .page-header .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--green-mid), #3aaa44);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    padding: 5px 18px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .page-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1.15;
+    text-shadow: 0 3px 14px rgba(0,0,0,.5);
+  }
+  .page-header p {
+    margin-top: 10px;
+    font-size: 15px;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+  .header-divider {
+    width: 64px; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--green-mid));
+    border-radius: 2px;
+    margin: 14px auto 0;
+  }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp .7s ease .2s both;
+  }
+  .stat-chip {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    border-radius: 50px;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+  }
+  .stat-chip .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+  }
+  .dot-total  { background: var(--gold); }
+  .dot-ans    { background: #4caf50; box-shadow: 0 0 6px #4caf50; }
+  .dot-pend   { background: #ff9800; box-shadow: 0 0 6px #ff9800; }
+
+  /* ── MAIN GLASS PANEL ── */
+  .panel {
+    width: 100%;
+    max-width: 1100px;
+    background: var(--glass-bg);
+    border: 1.5px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    animation: fadeUp .7s ease .25s both;
+  }
+
+  /* Table header */
+  .table-head {
+    display: grid;
+    grid-template-columns: 180px 1fr 1fr 130px;
+    background: linear-gradient(90deg, rgba(26,74,31,.9), rgba(45,122,53,.8));
+    border-bottom: 1.5px solid var(--glass-border);
+  }
+  .th {
+    padding: 16px 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .th:not(:last-child) { border-right: 1px solid rgba(255,255,255,.1); }
+
+  /* Table body */
+  #table-body { width: 100%; }
+
+  .q-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 1fr 130px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    transition: background .2s;
+    animation: rowIn .45s ease both;
+  }
+  .q-row:last-child { border-bottom: none; }
+  .q-row:hover { background: rgba(255,255,255,.06); }
+
+  .td {
+    padding: 18px 20px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-light);
+    display: flex;
+    align-items: flex-start;
+  }
+  .td:not(:last-child) { border-right: 1px solid rgba(255,255,255,.06); }
+
+  /* Expert cell */
+  .expert-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .expert-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green-mid), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+  .expert-name { font-weight: 600; font-size: 13.5px; }
+
+  /* Question text */
+  .question-text {
+    font-weight: 400;
+    color: rgba(255,255,255,.85);
+  }
+
+  /* Answer text */
+  .answer-text { color: rgba(255,255,255,.7); font-style: italic; font-size: 13.5px; }
+  .answer-waiting { color: #ff9800; font-style: italic; font-size: 13px; }
+
+  /* Status badge */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    text-transform: capitalize;
+  }
+  .status-answered {
+    background: rgba(76,175,80,.18);
+    color: #81c784;
+    border: 1px solid rgba(76,175,80,.35);
+  }
+  .status-pending {
+    background: rgba(255,152,0,.15);
+    color: #ffb74d;
+    border: 1px solid rgba(255,152,0,.35);
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+  }
+  .status-answered .status-dot { background: #81c784; box-shadow: 0 0 5px #4caf50; }
+  .status-pending  .status-dot { background: #ffb74d; box-shadow: 0 0 5px #ff9800; animation: pulse 1.5s ease-in-out infinite; }
+
+  /* Empty state */
+  .empty-state {
+    padding: 70px 24px;
+    text-align: center;
+    color: var(--text-muted);
+  }
+  .empty-state .empty-icon { font-size: 3.5rem; margin-bottom: 16px; }
+  .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; }
+
+  /* Loading skeleton */
+  .skeleton-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 1fr 130px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    padding: 18px 20px;
+    gap: 20px;
+  }
+  .skel {
+    height: 18px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, rgba(255,255,255,.06) 25%, rgba(255,255,255,.12) 50%, rgba(255,255,255,.06) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Animations */
+  @keyframes slideDown { from { opacity:0; transform:translateY(-18px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp    { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes rowIn     { from { opacity:0; transform:translateX(-10px); } to { opacity:1; transform:translateX(0); } }
+  @keyframes shimmer   { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  @keyframes pulse     { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .table-head, .q-row, .skeleton-row {
+      grid-template-columns: 1fr;
+    }
+    .th:not(:last-child), .td:not(:last-child) { border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .th { padding: 10px 16px; }
+    .td { padding: 12px 16px; }
+    .page-header h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-wrap"></div>
+
+<div class="page">
+
+  <!-- Top nav -->
+  <nav class="topnav">
+    <a href="/" class="nav-brand"><span>Kisan</span>Mitra</a>
+    <a href="javascript:history.back()" class="nav-back">← Dashboard</a>
+  </nav>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="badge">💬 Farmer Support</div>
+    <h1>My Questions & Expert Answers</h1>
+    <p>Track all your farming queries and receive guidance from certified agricultural experts</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-chip"><span class="dot dot-total"></span><span id="statTotal">— Total</span></div>
+    <div class="stat-chip"><span class="dot dot-ans"></span><span id="statAnswered">— Answered</span></div>
+    <div class="stat-chip"><span class="dot dot-pend"></span><span id="statPending">— Pending</span></div>
+  </div>
+
+  <!-- Main panel -->
+  <div class="panel">
+    <!-- Table header -->
+    <div class="table-head">
+      <div class="th">👨‍🌾 Expert</div>
+      <div class="th">❓ Question</div>
+      <div class="th">💡 Answer</div>
+      <div class="th">📋 Status</div>
+    </div>
+    <!-- Table body -->
+    <div id="table-body">
+      <!-- Skeleton loading rows -->
+      <div class="skeleton-row" id="skel1">
+        <div class="skel" style="width:70%"></div>
+        <div class="skel" style="width:85%"></div>
+        <div class="skel" style="width:60%"></div>
+        <div class="skel" style="width:55%"></div>
+      </div>
+      <div class="skeleton-row" id="skel2">
+        <div class="skel" style="width:60%"></div>
+        <div class="skel" style="width:90%"></div>
+        <div class="skel" style="width:75%"></div>
+        <div class="skel" style="width:50%"></div>
+      </div>
+      <div class="skeleton-row" id="skel3">
+        <div class="skel" style="width:65%"></div>
+        <div class="skel" style="width:80%"></div>
+        <div class="skel" style="width:55%"></div>
+        <div class="skel" style="width:60%"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .page -->
+
+<script>
+const user = JSON.parse(localStorage.getItem("user")) || { id: 1 };
+
+function getInitials(name) {
+  if (!name || name === '-') return '?';
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+}
+
+function updateStats(questions) {
+  const total    = questions.length;
+  const answered = questions.filter(q => q.status === 'answered').length;
+  const pending  = total - answered;
+  document.getElementById('statTotal').textContent    = total    + ' Total';
+  document.getElementById('statAnswered').textContent = answered + ' Answered';
+  document.getElementById('statPending').textContent  = pending  + ' Pending';
+}
+
+async function loadQuestions() {
+  try {
+    const res = await fetch(
+      "http://localhost:5000/api/users/farmer-questions/" + user.id
+    );
+    const questions = await res.json();
+
+    updateStats(questions);
+    renderTable(questions);
+  } catch (err) {
+    // Demo fallback data for preview
+    const demo = [
+      { expert_name: 'Dr. Ramesh Kumar', question: 'My rice crop leaves are turning yellow. What could be the cause?', answer: 'This is likely nitrogen deficiency. Apply urea at 25 kg/acre immediately and ensure proper irrigation.', status: 'answered' },
+      { expert_name: null,              question: 'Which pesticide is safe for tomato crops during flowering stage?', answer: null, status: 'pending' },
+      { expert_name: 'Smt. Anitha Rao', question: 'How to control aphids on cotton plants organically?', answer: 'Use neem oil spray (5ml/litre) every 7 days. You can also introduce ladybugs as natural predators.', status: 'answered' },
+    ];
+    updateStats(demo);
+    renderTable(demo);
+  }
+}
+
+function renderTable(questions) {
+  const tbody = document.getElementById('table-body');
+
+  if (!questions.length) {
+    tbody.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🌱</div>
+        <h3>No Questions Yet</h3>
+        <p>You haven't asked any questions to our experts yet. Start by submitting your first farming query!</p>
+      </div>`;
+    return;
+  }
+
+  tbody.innerHTML = questions.map((q, i) => {
+    const initials  = getInitials(q.expert_name);
+    const isAnswered = q.status === 'answered';
+
+    return `
+    <div class="q-row" style="animation-delay:${i * 0.07}s">
+      <div class="td">
+        <div class="expert-cell">
+          <div class="expert-avatar">${initials}</div>
+          <div class="expert-name">${q.expert_name || 'Unassigned'}</div>
+        </div>
+      </div>
+      <div class="td"><span class="question-text">${q.question}</span></div>
+      <div class="td">
+        ${q.answer
+          ? `<span class="answer-text">${q.answer}</span>`
+          : `<span class="answer-waiting">⏳ Waiting for expert reply...</span>`
+        }
+      </div>
+      <div class="td">
+        <span class="status-badge ${isAnswered ? 'status-answered' : 'status-pending'}">
+          <span class="status-dot"></span>
+          ${q.status}
+        </span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+loadQuestions();
+</script>
+</body>
+</html>
