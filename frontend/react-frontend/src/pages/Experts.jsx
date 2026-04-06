@@ -8,7 +8,7 @@ const navigate = useNavigate();
 
 useEffect(()=>{
 
-fetch("http://localhost:5000/api/users/experts")
+fetch("http:///api/users/experts")
 .then(res=>res.json())
 .then(data=>setExperts(data));
 

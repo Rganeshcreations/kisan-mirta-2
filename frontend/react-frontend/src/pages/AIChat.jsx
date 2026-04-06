@@ -8,7 +8,7 @@ const [chat,setChat] = useState([]);
 async function sendMessage(){
 
 const res = await fetch(
-"http://localhost:5000/api/users/ai-chat",
+"http:///api/users/ai-chat",
 {
 method:"POST",
 headers:{

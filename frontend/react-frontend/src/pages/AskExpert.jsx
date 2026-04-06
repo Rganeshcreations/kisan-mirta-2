@@ -20,7 +20,7 @@ return;
 }
 
 const res = await fetch(
-"http://localhost:5000/api/users/ask-question",
+"http:///api/users/ask-question",
 {
 method:"POST",
 headers:{

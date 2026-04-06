@@ -17,7 +17,7 @@ loadCrops();
 async function loadCrops(){
 
 const res = await fetch(
-"http://localhost:5000/api/users/get-crops/"+user.id
+"http:///api/users/get-crops/"+user.id
 );
 
 const data = await res.json();
@@ -35,7 +35,7 @@ return;
 }
 
 await fetch(
-"http://localhost:5000/api/users/add-crop",
+"http:///api/users/add-crop",
 {
 method:"POST",
 headers:{

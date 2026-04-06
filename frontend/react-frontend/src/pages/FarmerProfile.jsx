@@ -16,7 +16,7 @@ loadProfile();
 async function loadProfile(){
 
 const res = await fetch(
-"http://localhost:5000/api/users/farmer-profile/"+user.id
+"http:///api/users/farmer-profile/"+user.id
 );
 
 const data = await res.json();

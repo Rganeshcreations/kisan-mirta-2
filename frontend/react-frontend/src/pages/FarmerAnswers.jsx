@@ -8,7 +8,7 @@ const [questions,setQuestions] = useState([]);
 
 useEffect(()=>{
 
-fetch("http://localhost:5000/api/users/my-questions/"+user.id)
+fetch("http:///api/users/my-questions/"+user.id)
 .then(res=>res.json())
 .then(data=>setQuestions(data));
 

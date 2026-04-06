@@ -8,7 +8,7 @@ const [profile,setProfile] = useState({});
 
 useEffect(()=>{
 
-fetch("http://localhost:5000/api/users/expert-profile/"+user.id)
+fetch("http:///api/users/expert-profile/"+user.id)
 .then(res=>res.json())
 .then(data=>setProfile(data));
 
