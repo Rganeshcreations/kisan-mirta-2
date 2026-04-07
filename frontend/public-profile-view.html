@@ -76,7 +76,7 @@ async function loadProfile(){
   try {
 
     const res = await fetch(
-      `http:///api/users/public-profile/${user.id}`
+      `https://kisanmitra-backend-98bb.onrender.com/api/users/public-profile/${user.id}`
     );
 
     const data = await res.json();

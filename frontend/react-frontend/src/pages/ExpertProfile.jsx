@@ -8,7 +8,7 @@ const [profile,setProfile] = useState({});
 
 useEffect(()=>{
 
-fetch("http:///api/users/expert-profile/"+user.id)
+fetch("https://kisanmitra-backend-98bb.onrender.com/api/users/expert-profile/"+user.id)
 .then(res=>res.json())
 .then(data=>setProfile(data));
 

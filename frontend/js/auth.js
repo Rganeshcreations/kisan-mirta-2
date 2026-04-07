@@ -86,7 +86,7 @@ function registerUser() {
     return;
   }
 
-  fetch("http:///api/users/register", {
+  fetch("https://kisanmitra-backend-98bb.onrender.com/api/users/register", {
 
     method: "POST",
 
@@ -136,7 +136,7 @@ function loginUser() {
     return;
   }
 
-  fetch("http:///api/users/login", {
+  fetch("https://kisanmitra-backend-98bb.onrender.com/api/users/login", {
 
     method: "POST",
 
@@ -176,7 +176,7 @@ function sendOtp() {
     return;
   }
 
-  fetch("http:///api/users/send-otp", {
+  fetch("https://kisanmitra-backend-98bb.onrender.com/api/users/send-otp", {
 
     method: "POST",
 
@@ -221,7 +221,7 @@ function verifyOtp() {
     return;
   }
 
-  fetch("http:///api/users/verify-otp", {
+  fetch("https://kisanmitra-backend-98bb.onrender.com/api/users/verify-otp", {
 
     method: "POST",
 
@@ -347,7 +347,7 @@ function saveFarmerProfile() {
     return;
   }
 
-  fetch("http:///api/users/farmer-profile", {
+  fetch("https://kisanmitra-backend-98bb.onrender.com/api/users/farmer-profile", {
 
     method: "POST",
 

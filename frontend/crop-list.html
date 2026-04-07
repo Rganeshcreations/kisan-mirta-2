@@ -101,7 +101,7 @@ window.location.href="/login";
 async function loadCrops(){
 
 const res = await fetch(
-"http:///api/users/get-crops/"+user.id
+"https://kisanmitra-backend-98bb.onrender.com/api/users/get-crops/"+user.id
 );
 
 const crops = await res.json();

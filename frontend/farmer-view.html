@@ -118,7 +118,7 @@ document.getElementById("farmerName").innerText = user.name || "Farmer";
 try {
 
 const res = await fetch(
-"http:///api/users/farmer-profile/" + user.id
+"https://kisanmitra-backend-98bb.onrender.com/api/users/farmer-profile/" + user.id
 );
 
 const profile = await res.json();

@@ -16,7 +16,7 @@ loadProfile();
 async function loadProfile(){
 
 const res = await fetch(
-"http:///api/users/farmer-profile/"+user.id
+"https://kisanmitra-backend-98bb.onrender.com/api/users/farmer-profile/"+user.id
 );
 
 const data = await res.json();

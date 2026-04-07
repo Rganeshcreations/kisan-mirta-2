@@ -8,7 +8,7 @@ const navigate = useNavigate();
 
 useEffect(()=>{
 
-fetch("http:///api/users/experts")
+fetch("https://kisanmitra-backend-98bb.onrender.com/api/users/experts")
 .then(res=>res.json())
 .then(data=>setExperts(data));
 

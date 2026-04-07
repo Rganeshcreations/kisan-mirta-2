@@ -8,7 +8,7 @@ const [questions,setQuestions] = useState([]);
 
 useEffect(()=>{
 
-fetch("http:///api/users/expert-questions/"+user.id)
+fetch("https://kisanmitra-backend-98bb.onrender.com/api/users/expert-questions/"+user.id)
 .then(res=>res.json())
 .then(data=>setQuestions(data));
 
@@ -20,7 +20,7 @@ async function sendAnswer(id){
 const answer = document.getElementById("answer_"+id).value;
 
 await fetch(
-"http:///api/users/answer-question",
+"https://kisanmitra-backend-98bb.onrender.com/api/users/answer-question",
 {
 method:"POST",
 headers:{

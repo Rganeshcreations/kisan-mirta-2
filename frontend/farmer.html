@@ -208,7 +208,7 @@ try{
 const user = JSON.parse(localStorage.getItem("user"));
 
 const res = await fetch(
-"http:///api/users/farmer-dashboard/"+user.id
+"https://kisanmitra-backend-98bb.onrender.com/api/users/farmer-dashboard/"+user.id
 );
 
 const data = await res.json();

@@ -8,7 +8,7 @@ const [chat,setChat] = useState([]);
 async function sendMessage(){
 
 const res = await fetch(
-"http:///api/users/ai-chat",
+"https://kisanmitra-backend-98bb.onrender.com/api/users/ai-chat",
 {
 method:"POST",
 headers:{

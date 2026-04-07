@@ -237,7 +237,7 @@ async function loadFarmers(){
 
 try{
 
-const res = await fetch("http:///api/admin/farmers");
+const res = await fetch("https://kisanmitra-backend-98bb.onrender.com/api/admin/farmers");
 const farmers = await res.json();
 
 allFarmers = farmers;

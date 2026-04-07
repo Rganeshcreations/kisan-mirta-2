@@ -17,7 +17,7 @@ loadCrops();
 async function loadCrops(){
 
 const res = await fetch(
-"http:///api/users/get-crops/"+user.id
+"https://kisanmitra-backend-98bb.onrender.com/api/users/get-crops/"+user.id
 );
 
 const data = await res.json();
@@ -35,7 +35,7 @@ return;
 }
 
 await fetch(
-"http:///api/users/add-crop",
+"https://kisanmitra-backend-98bb.onrender.com/api/users/add-crop",
 {
 method:"POST",
 headers:{
